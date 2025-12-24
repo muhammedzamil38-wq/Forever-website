@@ -6,7 +6,7 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
-  const { setShowSearch,GetCartCount,navigate } = useContext(ShopContext);
+  const { setShowSearch, GetCartCount, navigate } = useContext(ShopContext);
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
@@ -34,18 +34,20 @@ const Navbar = () => {
       </ul>
       <div className="flex items-center gap-6">
         <img
-          onClick={() => [setShowSearch(true),navigate('/collection')]}
+          onClick={() => [setShowSearch(true), navigate("/collection")]}
           src={assets.search_icon}
           className="w-5 cursor-pointer"
           alt="Search"
         />
 
         <div className="group relative">
-          <img
-            className="w-5 cursor-pointer"
-            src={assets.profile_icon}
-            alt=""
-          />
+          <Link to={'/login'}>
+            <img
+              className="w-5 cursor-pointer"
+              src={assets.profile_icon}
+              alt=""
+            />
+          </Link>
           <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
             <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
               <p className="cursor-pointer hover:text-black">My Profile</p>
