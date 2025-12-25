@@ -1,6 +1,15 @@
 # .gitignore
+backend/
 # Ignore node modules
 node_modules/
+# Ignore dependency directories
+bower_components/
+# ignore packaged files
+*.tgz
+package-lock.json
+yarn.lock
+package.json
+
 # Ignore build output
 dist/
 build/
