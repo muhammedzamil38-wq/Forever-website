@@ -1,0 +1,189 @@
+# .gitignore
+# Ignore node modules
+node_modules/
+# Ignore build output
+dist/
+build/
+# Ignore environment variable files
+.env
+.env.local
+.env.*.local
+# Ignore log files
+*.log
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+# Ignore IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+# Ignore coverage reports
+coverage/
+# Ignore temporary files
+*.tmp
+*.swp
+# Ignore package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+# Ignore test output
+test-output/
+# Ignore compiled files
+*.class
+*.obj
+*.exe
+*.dll
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+# Ignore Ruby specific files
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+# Ignore Java specific files
+*.jar
+*.war
+*.ear
+# Ignore Go specific files
+bin/
+*.exe
+*.test
+*.out
+# Ignore Rust specific files
+/target/
+*.rlib
+*.rmeta
+# Ignore C/C++ specific files
+*.obj
+*.elf   
+*.obj
+*.so    
+*.dylib
+*.lib
+*.a
+# Ignore backup files
+*~.bak
+*.backup
+# Ignore media files
+*.mp4
+*.mp3   
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mkv
+*.wav
+*.flac
+# Ignore image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp   
+*.tiff
+*.svg
+*.ico
+*.webp
+# Ignore document files
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+*.odt
+*.ods
+*.odp
+*.txt
+*.rtf
+*.md
+# Ignore archive files
+*.zip
+*.tar.gz
+
+*.rar
+*.7z
+*.gz
+*.bz2
+*.xz
+# Ignore virtual environment folders
+venv/
+.env/
+__pycache__/
+.ipynb_checkpoints/
+# Ignore compiled files
+*.pyc
+
+*.pyo
+*.pyd
+# Ignore Jupyter Notebook checkpoints
+
+.ipynb_checkpoints/
+# Ignore database files
+*.sqlite3
+*.db
+*.sql
+
+# Ignore miscellaneous files
+*.log
+*.cache
+*.tmp
+*.swp
+*.bak
+*~
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+# Ignore IDE specific files
+
+.vscode/
+.idea/
+*.sublime-project
+
+*.sublime-workspace
+# Ignore package manager files                                                      
+node_modules/
+dist/
+build/  
+.env
+.env.local  
+.env.*.local
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+coverage/
+test-output/
+bin/
+*.exe
+*.test
+*.out
+target/
+*.rlib
+*.rmeta
+*.obj
+*.elf
+*.so
+*.dylib
+
+*.lib
+*.a
+*~.bak
+*.backup
+*.mp4
+*.mp3
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mkv
+*.wav
+*.flac
+*.png
+*.jpg
+*.jpeg
+*.gif
