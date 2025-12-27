@@ -1,5 +1,6 @@
 # .gitignore
 backend/
+admin/
 # Ignore node modules
 node_modules/
 # Ignore dependency directories
