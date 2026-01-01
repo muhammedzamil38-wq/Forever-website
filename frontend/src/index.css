@@ -27,5 +27,6 @@ a.active hr{
   }
 }
 button:hover{
-  transform: scale(10px);
+  transform: scale(110%);
+  transition: ease-in-out;
 }
