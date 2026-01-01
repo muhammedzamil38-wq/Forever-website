@@ -26,3 +26,6 @@ a.active hr{
     color: white;
   }
 }
+button:hover{
+  transform: scale(10px);
+}
