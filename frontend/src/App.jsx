@@ -11,36 +11,35 @@ import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Verify from "./pages/Verify";
 import Loading from "./components/Loading";
 
-
-const AppLazy = React.lazy(()=>{
-  return import('./pages/Collection')
-})
+const AppLazy = React.lazy(() => import("./pages/Collection"));
 
 const App = () => {
   return (
-    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <ToastContainer/>
-      <Navbar />
-      <SearchBar/>
-      <Routes>
-        <Route path="/" element={<Home />} />
-       <Suspense fallback={<Loading/>} > <Route path="/collection" element={<AppLazy />} /></Suspense>
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:productId" element={<Product />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/place-order" element={<PlaceOrder />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/verify" element={<Verify />} />
-      </Routes>
-      <Footer />
-    </div>
+    <Suspense fallback={<Loading />}>
+      <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+        <ToastContainer />
+        <Navbar />
+        <SearchBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/collection" element={<AppLazy />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/product/:productId" element={<Product />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/place-order" element={<PlaceOrder />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/verify" element={<Verify />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Suspense>
   );
 };
 
