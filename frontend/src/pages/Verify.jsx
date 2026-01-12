@@ -7,6 +7,7 @@ import axios from "axios";
 
 const Verify = () => {
   const { navigate, token, setCartItems, backendurl } = useContext(ShopContext);
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
   const success = searchParams.get("success");
