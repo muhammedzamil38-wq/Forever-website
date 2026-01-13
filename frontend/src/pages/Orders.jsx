@@ -24,6 +24,7 @@ const Orders = () => {
             item['payment'] = order.payment
             item['paymentMethod'] = order.paymentMethod
             item['date'] = order.date
+            item['orderId'] = order._id
             allOrdersItem.push(item)
           })
         })
@@ -36,10 +37,29 @@ const Orders = () => {
       toast.error(error.message)
     }
   }
+
+  // Cancel order handler
+  const cancelOrder = async (orderId) => {
+    try {
+      if (!token) return null
+      const response = await axios.post(backendurl + '/api/order/cancel', { orderId }, { headers: { token } })
+      if (response.data.success) {
+        toast.success(response.data.message || 'Order cancelled')
+        loadOrderData()
+      } else {
+        toast.error(response.data.message || 'Could not cancel order')
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
   useEffect(()=>{
     loadOrderData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ token])
+
   return (
     <div className='border-t pt-16'>
       <div className="text-2xl">
@@ -67,6 +87,9 @@ const Orders = () => {
               <div className="flex items-center gap-2">
                 <p className='min-w-2 h-2 rounded-full bg-green-500'></p>
                 <p className='text-sm md:text-base'>{item.status}</p>
+              </div>
+              <div>
+                <button onClick={() => cancelOrder(item.orderId)} disabled={item.status !== 'Order Placed'} className={'border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 ' + (item.status !== 'Order Placed' ? 'opacity-40 cursor-not-allowed' : '')}>{item.status === 'Order Placed' ? 'Cancel Order' : 'Cannot Cancel'}</button>
               </div>
               <button onClick={loadOrderData} className='border px-4 py-2 text-sm font-medium rounded-sm cursor-pointer'>Track Order</button>
               </div>

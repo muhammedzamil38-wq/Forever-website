@@ -206,4 +206,27 @@ const updateStatus = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
-export { verifyRazorpay, verifyStripe, placeOrder, placeOrderRazorPay, placeOrderStripe, userOrders, updateStatus, allOrders };
+
+// Cancel order by user (only owner can cancel)
+const cancelOrder = async (req, res) => {
+  try {
+    const { orderId, userId } = req.body;
+
+    const order = await OrderModel.findById(orderId);
+    if (!order) {
+      return res.json({ success: false, message: "Order not found" });
+    }
+
+    if (order.userId.toString() !== userId) {
+      return res.json({ success: false, message: "Not Authorized" });
+    }
+
+    await OrderModel.findByIdAndDelete(orderId);
+    res.json({ success: true, message: "Order Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { verifyRazorpay, verifyStripe, placeOrder, placeOrderRazorPay, placeOrderStripe, userOrders, updateStatus, allOrders, cancelOrder };

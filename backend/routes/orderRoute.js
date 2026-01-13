@@ -8,6 +8,7 @@ import {
   allOrders,
   verifyStripe,
   verifyRazorpay,
+  cancelOrder,
 } from "../controllers/orderController.js";
 import adminAuth from "../midlleware/adminAuth.js";
 import authUser from "../midlleware/auth.js";
@@ -25,6 +26,8 @@ orderRouter.post("/razorpay", authUser, placeOrderRazorPay);
 
 // User Feature
 orderRouter.post("/userorders", authUser, userOrders);
+// Allow users to cancel their own orders
+orderRouter.post("/cancel", authUser, cancelOrder);
 
 // Verify Order
 orderRouter.post('/verifyStripe',authUser,verifyStripe)
