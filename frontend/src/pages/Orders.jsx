@@ -89,8 +89,10 @@ const Orders = () => {
                 <p className='text-sm md:text-base'>{item.status}</p>
               </div>
               <div>
-                <button onClick={() => cancelOrder(item.orderId)} disabled={item.status !== 'Order Placed'} className={'border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 ' + (item.status !== 'Order Placed' ? 'opacity-40 cursor-not-allowed' : '')}>{item.status === 'Order Placed' ? 'Cancel Order' : 'Cannot Cancel'}</button>
+                {item.status !== 'Delivered' ? <button onClick={() => cancelOrder(item.orderId)} disabled={item.status !== 'Order Placed'} className={'border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 ' + (item.status !== 'Order Placed' ? 'opacity-40 cursor-not-allowed' : '')}>{item.status === 'Order Placed' ? 'Cancel Order' : 'Cannot Cancel'}</button> : 
+                <button className='border px-4 py-2 text-sm font-medium rounded-sm cursor-pointer'>Return Order</button>}
               </div>
+              
               <button onClick={loadOrderData} className='border px-4 py-2 text-sm font-medium rounded-sm cursor-pointer'>Track Order</button>
               </div>
             </div>
