@@ -1,15 +1,5 @@
 import express from "express";
-import {
-  placeOrder,
-  placeOrderRazorPay,
-  placeOrderStripe,
-  userOrders,
-  updateStatus,
-  allOrders,
-  verifyStripe,
-  verifyRazorpay,
-  cancelOrder,
-} from "../controllers/orderController.js";
+import { placeOrder, placeOrderRazorPay, placeOrderStripe, userOrders, updateStatus, allOrders, verifyStripe, verifyRazorpay, cancel_return_Order, returnOrder } from "../controllers/orderController.js";
 import adminAuth from "../midlleware/adminAuth.js";
 import authUser from "../midlleware/auth.js";
 
@@ -27,11 +17,14 @@ orderRouter.post("/razorpay", authUser, placeOrderRazorPay);
 // User Feature
 orderRouter.post("/userorders", authUser, userOrders);
 // Allow users to cancel their own orders
-orderRouter.post("/cancel", authUser, cancelOrder);
+orderRouter.post("/cancel-return", authUser || adminAuth , cancel_return_Order);
+
+// returning order
+
+orderRouter.post("/return", authUser, returnOrder);
 
 // Verify Order
-orderRouter.post('/verifyStripe',authUser,verifyStripe)
-orderRouter.post('/verifyRazorpay',authUser,verifyRazorpay)
-
+orderRouter.post("/verifyStripe", authUser, verifyStripe);
+orderRouter.post("/verifyRazorpay", authUser, verifyRazorpay);
 
 export default orderRouter;

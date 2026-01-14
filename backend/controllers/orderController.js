@@ -1,5 +1,6 @@
 import OrderModel from "../models/orderModel.js";
 import userModel from "../models/useModel.js";
+import jwt from "jsonwebtoken";
 import Stripe from "stripe";
 import razorpay from "razorpay";
 //global variables
@@ -207,10 +208,51 @@ const updateStatus = async (req, res) => {
   }
 };
 
-// Cancel order by user (only owner can cancel)
-const cancelOrder = async (req, res) => {
+// Cancel order by user (only owner can cancel) and admin return accept
+const cancel_return_Order = async (req, res) => {
   try {
     const { orderId, userId } = req.body;
+
+    const order = await OrderModel.findById(orderId);
+    if (!order) {
+      return res.json({ success: false, message: "Order not found" });
+    }
+
+    // Check if requester is admin by verifying token payload
+    let isAdmin = false;
+    try {
+      const { token } = req.headers;
+      if (token) {
+        const token_decode = jwt.verify(token, process.env.JWT_SECRET);
+        if (token_decode === process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
+          isAdmin = true;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({ success: false, message: error.message });
+    }
+
+    // If not admin, ensure requester is the owner
+    if (!isAdmin) {
+      if (order.userId.toString() !== userId) {
+        return res.json({ success: false, message: "Not Authorized" });
+      }
+    }
+
+    await OrderModel.findByIdAndDelete(orderId);
+    res.json({ success: true, message: isAdmin ? "Return Accepted" : "Order Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// Return Order
+
+const returnOrder = async (req, res) => {
+  try {
+    const { orderId, userId, returned } = req.body;
 
     const order = await OrderModel.findById(orderId);
     if (!order) {
@@ -221,12 +263,12 @@ const cancelOrder = async (req, res) => {
       return res.json({ success: false, message: "Not Authorized" });
     }
 
-    await OrderModel.findByIdAndDelete(orderId);
-    res.json({ success: true, message: "Order Cancelled" });
+    await OrderModel.findByIdAndUpdate(orderId, { returned });
+    res.json({ success: true, message: "return message send to admin" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
   }
 };
 
-export { verifyRazorpay, verifyStripe, placeOrder, placeOrderRazorPay, placeOrderStripe, userOrders, updateStatus, allOrders, cancelOrder };
+export { verifyRazorpay, verifyStripe, placeOrder, placeOrderRazorPay, placeOrderStripe, userOrders, updateStatus, allOrders, cancel_return_Order, returnOrder };

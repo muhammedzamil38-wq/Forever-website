@@ -38,6 +38,22 @@ const Orders = ({ token }) => {
       toast.error(error.message);
     }
   };
+
+  const returnButtonClick = async (orderId) => {
+    try {
+      if (!token) return null;
+      const response = await axios.post(backendUrl + "/api/order/cancel-return", { orderId }, { headers: { token } });
+      if (response.data.success) {
+        toast.success(response.data.message || "Return Accepted");
+        await fetchAllOrders();
+      } else {
+        toast.error(response.data.message || "Could not accept return");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
   useEffect(() => {
     fetchAllOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,11 +95,37 @@ const Orders = ({ token }) => {
               <p className="mt-3">Method: {order.paymentMethod}</p>
               <p>Payment: {order.payment ? "Done" : "Pending"}</p>
               <p>Date : {new Date(order.date).toLocaleDateString()}</p>
+              <br />
+              <br />
+              {order.returned ? (
+                <p className="text-sm sm:text-[15px]">
+                  {currency} {order.amount}
+                </p>
+              ) : (
+                ""
+              )}
             </div>
-            <p className="text-sm sm:text-[15px]">
-              {currency} {order.amount}
-            </p>
-            <select onChange={(event) => statusHandler(event, order._id)} value={order.status} className="p-2 font-semibold cursor-pointer">
+            {!order.returned ? (
+              <p className="text-sm sm:text-[15px]">
+                {currency} {order.amount}
+              </p>
+            ) : (
+              ""
+            )}
+
+            {order.returned ? (
+              <div className="border border-black p-2 rounded-sm">
+                <p>User asking for return</p>
+                <br />
+                <button onClick={() => returnButtonClick(order._id)} className="w-full p-1.5 border border-black rounded-sm cursor-pointer">
+                  Accept
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+
+            <select disabled={order.status === 'Delivered'} onChange={(event) => statusHandler(event, order._id)} value={order.status} className="p-2 font-semibold cursor-pointer">
               <option value="Order Placed">Order Placed</option>
               <option value="Packing">Packing</option>
               <option value="Shipped">Shipped</option>

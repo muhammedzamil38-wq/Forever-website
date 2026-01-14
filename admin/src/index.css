@@ -16,3 +16,8 @@ select,input,textarea{
 *{
     font-family: Outfit;
 }
+
+button:hover{
+  transform: scale(90%);
+  transition: ease-in-out;
+}
