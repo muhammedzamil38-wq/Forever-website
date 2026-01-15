@@ -11,7 +11,7 @@ const ShopContextProvider = (props) => {
   const backendurl = import.meta.env.VITE_BACKEND_URL;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [cartItems, setCartItem] = useState({});
+  const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
@@ -156,7 +156,7 @@ const ShopContextProvider = (props) => {
     backendurl,
     token,
     setToken,
-    setCartItem
+    setCartItems
   };
   return (
     <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>

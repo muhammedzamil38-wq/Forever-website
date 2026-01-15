@@ -12,14 +12,14 @@ const Navbar = () => {
     navigate,
     token,
     setToken,
-    setCartItem,
+    setCartItems,
   } = useContext(ShopContext);
 
   const logout = () => {
     navigate("/login");
     localStorage.removeItem("token");
     setToken("");
-    setCartItem({});
+    setCartItems({});
   };
 
   return (
