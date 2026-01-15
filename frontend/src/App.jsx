@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Collection from "./pages/Collection";
@@ -12,20 +12,22 @@ import Orders from "./pages/Orders";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Verify from "./pages/Verify";
 import GenerateOTP from "./components/GenerateOTP";
 import VerifyOTP from "./components/VerifyOTP";
+import { ShopContext } from "./context/ShopContext";
 
 const App = () => {
+  const { navigate, token } = useContext(ShopContext);
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <ToastContainer/>
+      <ToastContainer />
       <Navbar />
-      <SearchBar/>
+      <SearchBar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={!token ? navigate("/login") : <Home />} />
         <Route path="/collection" element={<Collection />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
@@ -35,8 +37,8 @@ const App = () => {
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/verify" element={<Verify />} />
-        <Route path="/generate-otp" element={<GenerateOTP/>} />
-        <Route path="/verify-otp" element={<VerifyOTP/>} />
+        <Route path="/generate-otp" element={<GenerateOTP />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
       </Routes>
       <Footer />
     </div>
