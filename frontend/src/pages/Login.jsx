@@ -31,9 +31,11 @@ const Login = () => {
     return !newErrors.name && !newErrors.email && !newErrors.password;
   };
 
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     if (!validateInputs()) return;
+
     try {
       if (currentState === "Sign Up") {
         const response = await axios.post(backendurl + "/api/user/register", {
@@ -42,8 +44,7 @@ const Login = () => {
           password,
         });
         if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
+          navigate('/generate-otp',{state:{email}})
         } else {
           toast.error(response.data.message);
         }
@@ -74,6 +75,7 @@ const Login = () => {
   return (
     <form
     id="form"
+    
       onSubmit={onSubmitHandler}
       className="flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800 "
     >

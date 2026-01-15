@@ -15,6 +15,8 @@ import SearchBar from "./components/SearchBar";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Verify from "./pages/Verify";
+import GenerateOTP from "./components/GenerateOTP";
+import VerifyOTP from "./components/VerifyOTP";
 
 const App = () => {
   return (
@@ -33,6 +35,8 @@ const App = () => {
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/generate-otp" element={<GenerateOTP/>} />
+        <Route path="/verify-otp" element={<VerifyOTP/>} />
       </Routes>
       <Footer />
     </div>

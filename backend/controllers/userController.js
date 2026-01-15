@@ -48,7 +48,7 @@ const registerUser = async (req, res) => {
     }
 
     // validating email format & strong password
-    if (!validator.isEmail) {
+    if (!validator.isEmail(email)) {
       return res.json({
         success: false,
         message: "Please enter a valid email",
@@ -125,7 +125,8 @@ const verifyOtp = async (req, res) => {
     user.otpExpire = null;
     await user.save()
 
-    res.json({success:true,message:"OTP Verified"})
+    const token = createToken(user._id);
+    res.json({success:true,message:"OTP Verified", token})
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
