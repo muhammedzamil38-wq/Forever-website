@@ -24,7 +24,9 @@ const GenerateOTP = () => {
             if (response.data.success) {
                 toast.success(response.data.message)
                 navigate('/verify-otp',{state:{email}})
-            }
+            }else(
+                toast.error(response.data.message)
+            )
         } catch (error) {
             console.log(error)
             toast.error(error.message)
