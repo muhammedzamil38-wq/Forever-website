@@ -5,6 +5,7 @@ import axios from "axios";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
 import { assets } from "../assets/assets";
+import Title from "../components/Title";
 
 const Orders = ({ token }) => {
   const [orders, setOrders] = useState([]);
@@ -59,8 +60,9 @@ const Orders = ({ token }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   return (
-    <div>
-      <h3>Order Page</h3>
+    <div className="w-full flex flex-col justify-evenly items-center border-b border-b-black">
+      <Title text1='ORDERS' text2='PAGE' />
+      <button onClick={fetchAllOrders} className="cursor-pointer p-2 m-2 bg-pink-200 border border-black rounded-sm w-full">LOAD ORDER</button>
       <div>
         {orders.map((order, index) => (
           <div className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 border-gray-200 p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-700" key={index}>
