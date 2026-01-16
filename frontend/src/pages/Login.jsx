@@ -92,7 +92,8 @@ const Login = () => {
             value={name}
             type="text"
             className="w-full px-3 py-2 border border-gray-800"
-            placeholder="Name" /><div className="text-red-600 text-[9px] h-3.25">{errors.name}</div></>
+            placeholder="Name" />
+            <div className="text-red-600 text-[9px] h-3.25">{errors.name}</div></>
            
       )}
       
