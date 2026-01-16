@@ -22,6 +22,41 @@ const PlaceOrder = () => {
     phone: "",
   });
 
+    const [errors, setErrors] = useState({ firstName: "", LastName:"" ,email: "", street: "", city: "", state: "", zipcode: "", country: "", phone: ""});
+  
+    const isValidEmail = (email) => {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    };
+  
+    const validateInputs = () => {
+      const newErrors = { firstName: "",LastName: "" ,email: "", street: "", city: "", state: "", zipcode: "", country: "", phone: ""};
+      
+        if (!formData.firstName.trim()) newErrors.firstName = "Name is required";
+        if (!formData.LastName.trim()) newErrors.LastName = "Name is required";
+      
+      if (!formData.email.trim()) newErrors.email = "Email is required";
+      else if (!isValidEmail(formData.email)) newErrors.email = "Provide a valid email address";
+
+      if (!formData.street.trim()) newErrors.street = "Street is required";
+      if (!formData.city.trim()) newErrors.city = "City is required";
+      if (!formData.state.trim()) newErrors.state = "State is required";
+      if (!formData.zipcode.trim()) newErrors.zipcode = "Zipcode is required";
+      if (!formData.country.trim()) newErrors.country = "Country is required";
+      
+
+      if (!formData.phone.trim()){ 
+        newErrors.phone = "Phone is required"
+      }else if(formData.phone.length !== 10){
+        newErrors.phone = "Invalid Phone Number"
+      }
+
+  
+      setErrors(newErrors);
+      return !newErrors.firstName && !newErrors.LastName && !newErrors.email && !newErrors.street && !newErrors.city && !newErrors.state && !newErrors.zipcode && !newErrors.country && !newErrors.phone;
+    };
+  
+
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -58,7 +93,9 @@ const PlaceOrder = () => {
   }
   
   const onSubmitHandler = async (event) => {
+    
     event.preventDefault()
+    if(!validateInputs()) return;
     try {
       let orderItems = []
       for(const items in cartItems){
@@ -125,24 +162,28 @@ const PlaceOrder = () => {
           <Title text1={"DELIVERY"} text2={"INFORMATION"} />
         </div>
         <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="firstName"
-            value={formData.firstName}
-            type="text"
-            placeholder="First Name"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="LastName"
-            value={formData.LastName}
-            type="text"
-            placeholder="Last Name"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
+          <div className="flex-1">
+            <input
+              onChange={onChangeHandler}
+              name="firstName"
+              value={formData.firstName}
+              type="text"
+              placeholder="First Name"
+              className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            />
+            <p className={errors.firstName ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.firstName}</p>
+          </div>
+          <div className="flex-1">
+            <input
+              onChange={onChangeHandler}
+              name="LastName"
+              value={formData.LastName}
+              type="text"
+              placeholder="Last Name"
+              className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            />
+            <p className={errors.LastName ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.LastName}</p>
+          </div>
         </div>
         <input
           onChange={onChangeHandler}
@@ -151,8 +192,8 @@ const PlaceOrder = () => {
           type="email"
           placeholder="Email address"
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          required
         />
+        <p className={errors.email ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.email}</p>
         <input
           onChange={onChangeHandler}
           name="street"
@@ -160,47 +201,56 @@ const PlaceOrder = () => {
           type="text"
           placeholder="Street"
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          required
+          
         />
+        <p className={errors.street ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.street}</p>
         <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="city"
-            value={formData.city}
-            type="text"
-            placeholder="City"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="state"
-            value={formData.state}
-            type="text"
-            placeholder="State"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
+          <div className="flex-1">
+            <input
+              onChange={onChangeHandler}
+              name="city"
+              value={formData.city}
+              type="text"
+              placeholder="City"
+              className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            />
+            <p className={errors.city ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.city}</p>
+          </div>
+          <div className="flex-1">
+            <input
+              onChange={onChangeHandler}
+              name="state"
+              value={formData.state}
+              type="text"
+              placeholder="State"
+              className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            />
+            <p className={errors.state ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.state}</p>
+          </div>
         </div>
         <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="zipcode"
-            value={formData.zipcode}
-            type="number"
-            placeholder="Zipcode"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="country"
-            value={formData.country}
-            type="text"
-            placeholder="Country"
-            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-            required
-          />
+          <div className="flex-1">
+            <input
+              onChange={onChangeHandler}
+              name="zipcode"
+              value={formData.zipcode}
+              type="number"
+              placeholder="Zipcode"
+              className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            />
+            <p className={errors.zipcode ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.zipcode}</p>
+          </div>
+          <div className="flex-1">
+            <input
+              onChange={onChangeHandler}
+              name="country"
+              value={formData.country}
+              type="text"
+              placeholder="Country"
+              className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            />
+            <p className={errors.country ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.country}</p>
+          </div>
         </div>
         <input
           onChange={onChangeHandler}
@@ -209,8 +259,8 @@ const PlaceOrder = () => {
           type="number"
           placeholder="Phone"
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          required
         />
+        <p className={errors.phone ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.phone}</p>
       </div>
 
       {/* ---------------- Right Side --------------------- */}
