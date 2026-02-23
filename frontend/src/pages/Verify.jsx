@@ -20,8 +20,23 @@ const Verify = () => {
             return null
         }
 
-        const response = await axios.post(backendurl+'/api/order/verifyStripe',{success,orderId},{headers:{token}})
+        // Retrieve order details from localStorage
+        const orderDataStr = localStorage.getItem('orderData')
+        const orderData = orderDataStr ? JSON.parse(orderDataStr) : {}
+
+        // Send order details along with success and orderId
+        const verifyData = {
+          success,
+          orderId,
+          userId: token,
+          items: orderData.items || [],
+          amount: orderData.amount || 0,
+          address: orderData.address || {},
+        }
+
+        const response = await axios.post(backendurl+'/api/order/verifyStripe', verifyData, {headers:{token}})
         if(response.data.success){
+            localStorage.removeItem('orderData')
             setCartItems({})
             navigate('/orders')
         }else{
