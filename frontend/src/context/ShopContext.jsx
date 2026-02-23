@@ -15,7 +15,6 @@ const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
-  const [IsModal,setIsModal] = useState(true)
 
   const addToCart = async (itemId, size) => {
     if (!size) {
@@ -159,8 +158,6 @@ const ShopContextProvider = (props) => {
     token,
     setToken,
     setCartItems,
-    IsModal,
-    setIsModal
   };
   return (
     <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>
