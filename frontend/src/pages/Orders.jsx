@@ -3,11 +3,19 @@ import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Modal from "../components/Modal";
 
 const Orders = () => {
   const { backendurl, token, currency } = useContext(ShopContext);
 
   const [orderData, setOrderData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [actionType, setActionType] = useState(null);
+
+  const cancelHandler = async () => {
+    return setShowModal(false);
+  };
 
   const loadOrderData = async () => {
     try {
@@ -37,6 +45,14 @@ const Orders = () => {
       toast.error(error.message);
     }
   };
+  const cancelmodalSubmitHandler = async () => {
+    await cancelOrder(selectedOrderId);
+    setShowModal(false);
+  };
+    const returnmodalSubmitHandler = async () => {
+    await returnOrder(selectedOrderId);
+    setShowModal(false);
+  };
 
   // Cancel order handler
   const cancelOrder = async (orderId) => {
@@ -58,7 +74,7 @@ const Orders = () => {
   const returnOrder = async (orderId) => {
     try {
       if (!token) return null;
-      const response = await axios.post(backendurl + "/api/order/return", { orderId , returned:true}, { headers: { token } });
+      const response = await axios.post(backendurl + "/api/order/return", { orderId, returned: true }, { headers: { token } });
       if (response.data.success) {
         toast.success(response.data.message);
         // refresh local data so button reflects the updated state
@@ -70,18 +86,28 @@ const Orders = () => {
       console.log(error);
       toast.error(error.message);
     }
-  }; 
+  };
 
-  
   useEffect(() => {
     loadOrderData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
   return (
     <div className="border-t pt-16">
       <div className="text-2xl">
         <Title text1={"MY"} text2={"ORDERS"} />
       </div>
+
+      {showModal && (
+        <Modal 
+          text={actionType === 'cancel' ? "Are you sure you want to cancel?" : "Are you sure you want to return this order?"}
+          title={actionType === 'cancel' ? "Canceling Order" : "Return Order"} 
+          buttonText={"Yes"} 
+          onSubmitHandler={actionType === 'cancel' ? cancelmodalSubmitHandler : returnmodalSubmitHandler}
+          cancelHandler={cancelHandler} 
+        />
+      )}
 
       <div className="">
         {orderData.map((item, index) => (
@@ -113,17 +139,31 @@ const Orders = () => {
               </div>
               <div className="items-center">
                 {item.status !== "Delivered" ? (
-                  <button onClick={() => cancelOrder(item.orderId)} disabled={item.status !== "Order Placed"} className={"border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " + (item.status !== "Order Placed" ? "opacity-40 cursor-not-allowed" : "")}>
+                  <button
+                    onClick={() => {
+                      setSelectedOrderId(item.orderId);
+                      setActionType('cancel');
+                      setShowModal(true);
+                    }}
+                    disabled={item.status !== "Order Placed"}
+                    className={"border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " + (item.status !== "Order Placed" ? "opacity-40 cursor-not-allowed" : "")}
+                  >
                     {item.status === "Order Placed" ? "Cancel Order" : "Cannot Cancel"}
                   </button>
                 ) : (
-                  <button onClick={() => returnOrder(item.orderId)} disabled={item.returned} className={"ml-[30%] border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " + (item.returned ? "opacity-40 cursor-not-allowed" : "") }>
+                  <button
+                    onClick={() => {
+                      setSelectedOrderId(item.orderId);
+                      setActionType('return');
+                      setShowModal(true);
+                    }}
+                    disabled={item.returned}
+                    className={"ml-[30%] border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " + (item.returned ? "opacity-40 cursor-not-allowed" : "")}
+                  >
                     {item.returned ? "Return Requested" : "Return Order"}
                   </button>
-                )} 
-                {
-                  item.returned ?<p className="m-3 p-2 border border-black rounded-sm text-center">⚠️The order will be removed from here after admin accepted the return</p>:''
-                }
+                )}
+                {item.returned ? <p className="m-3 p-2 border border-black rounded-sm text-center">⚠️The order will be removed from here after admin accepted the return</p> : ""}
               </div>
 
               <button onClick={loadOrderData} className="border px-4 py-2 text-sm font-medium rounded-sm cursor-pointer">
