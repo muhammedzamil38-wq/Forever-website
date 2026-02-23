@@ -64,7 +64,7 @@ const PlaceOrder = () => {
     setFormData((data) => ({ ...data, [name]: value }));
   };
 
-  const initPay = (order)=>{
+  const initPay = (order, orderData)=>{
     const option = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: order.amount,
@@ -76,8 +76,14 @@ const PlaceOrder = () => {
       handler: async (response) => {
         console.log(response)
         try {
-
-          const {data} = await axios.post(backendurl+'/api/order/verifyRazorpay',response,{headers:{token}})
+          const verifyData = {
+            ...response,
+            userId: token,
+            items: orderData.items,
+            amount: orderData.amount,
+            address: orderData.address,
+          };
+          const {data} = await axios.post(backendurl+'/api/order/verifyRazorpay',verifyData,{headers:{token}})
           if (data.success) {
             navigate('/orders')
             setCartItems({})
@@ -132,6 +138,7 @@ const PlaceOrder = () => {
           { const responseStripe = await axios.post(backendurl+'/api/order/stripe',orderData,{headers:{token}})
           console.log(responseStripe )
           if (responseStripe.data.success) {
+            localStorage.setItem('orderData', JSON.stringify(orderData))
             const {session_url} = responseStripe.data
             window.location.replace(session_url)
           }else{
@@ -142,7 +149,7 @@ const PlaceOrder = () => {
         case 'razorpay':
           { const responseRazorpay = await axios.post(backendurl+ '/api/order/razorpay',orderData,{headers:{token}})
           if (responseRazorpay.data.success) {
-            initPay(responseRazorpay.data.order);
+            initPay(responseRazorpay.data.order, orderData);
           }
           break; }
            default:

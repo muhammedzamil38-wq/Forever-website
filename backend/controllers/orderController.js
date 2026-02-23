@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import OrderModel from "../models/orderModel.js";
 import userModel from "../models/useModel.js";
 import jwt from "jsonwebtoken";
@@ -49,18 +50,7 @@ const placeOrderStripe = async (req, res) => {
     const { userId, items, amount, address } = req.body;
     const { origin } = req.headers;
 
-    const orderData = {
-      userId,
-      items,
-      address,
-      amount,
-      paymentMethod: "Stripe",
-      payment: false,
-      date: Date.now(),
-    };
-
-    const newOrder = OrderModel(orderData);
-    await newOrder.save();
+    const orderId = new mongoose.Types.ObjectId();
 
     const line_items = items.map((item) => ({
       price_data: {
@@ -86,12 +76,13 @@ const placeOrderStripe = async (req, res) => {
     });
 
     const session = await stripe.checkout.sessions.create({
-      success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
-      cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
+      success_url: `${origin}/verify?success=true&orderId=${orderId}`,
+      cancel_url: `${origin}/verify?success=false&orderId=${orderId}`,
       line_items,
       mode: "payment",
     });
-    res.json({ success: true, session_url: session.url });
+
+    res.json({ success: true, session_url: session.url, orderId });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -99,14 +90,23 @@ const placeOrderStripe = async (req, res) => {
 };
 // Verify Stripe
 const verifyStripe = async (req, res) => {
-  const { orderId, success, userId } = req.body;
+  const { orderId, success, userId, items, amount, address } = req.body;
   try {
     if (success === "true") {
-      await OrderModel.findByIdAndUpdate(orderId, { payment: true });
+      const orderData = {
+        _id: orderId,
+        userId,
+        items,
+        address,
+        amount,
+        paymentMethod: "Stripe",
+        payment: true,
+        date: Date.now(),
+      };
+      await new OrderModel(orderData).save();
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
       res.json({ success: true });
     } else {
-      await OrderModel.findByIdAndDelete(orderId);
       res.json({ success: false });
     }
   } catch (error) {
@@ -121,23 +121,12 @@ const placeOrderRazorPay = async (req, res) => {
   try {
     const { userId, items, amount, address } = req.body;
 
-    const orderData = {
-      userId,
-      items,
-      address,
-      amount,
-      paymentMethod: "Razorpay",
-      payment: false,
-      date: Date.now(),
-    };
-
-    const newOrder = OrderModel(orderData);
-    await newOrder.save();
+    const orderId = new mongoose.Types.ObjectId();
 
     const options = {
       amount: amount * 100,
       currency: currency.toUpperCase(),
-      receipt: newOrder._id,
+      receipt: orderId,
     };
 
     await razorpayInstance.orders.create(options, (error, order) => {
@@ -145,7 +134,7 @@ const placeOrderRazorPay = async (req, res) => {
         console.log(error);
         return res.json({ success: false, message: error });
       }
-      res.json({ success: true, order });
+      res.json({ success: true, order, orderId });
     });
   } catch (error) {
     console.log(error);
@@ -155,14 +144,25 @@ const placeOrderRazorPay = async (req, res) => {
 
 const verifyRazorpay = async (req, res) => {
   try {
-    const { userId, razorpay_order_id } = req.body;
+    const { userId, razorpay_order_id, items, amount, address } = req.body;
 
     const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
     if (orderInfo.status === "paid") {
-      await OrderModel.findByIdAndUpdate(orderInfo.receipt, { payment: true });
+      const orderData = {
+        _id: orderInfo.receipt,
+        userId,
+        items,
+        address,
+        amount,
+        paymentMethod: "Razorpay",
+        payment: true,
+        date: Date.now(),
+      };
+      await new OrderModel(orderData).save();
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
       res.json({ success: true, message: "Payment Successfull" });
     } else {
+      await OrderModel.findByIdAndDelete(orderInfo.receipt);
       res.json({ success: false, message: "Payment Failed" });
     }
   } catch (error) {
