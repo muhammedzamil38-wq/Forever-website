@@ -110,7 +110,7 @@ const generateOtp = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { email,otp } = req.body;
+    const { email, otp } = req.body;
     const user = await userModel.findOne({ email });
 
     if (!user) {
@@ -118,15 +118,15 @@ const verifyOtp = async (req, res) => {
     }
 
     if (user.otp !== otp || user.otpExpire < Date.now()) {
-      return res.json({success:false,message:"Invalid or expired OTP"})
+      return res.json({ success: false, message: "Invalid or expired OTP" });
     }
 
     user.otp = null;
     user.otpExpire = null;
-    await user.save()
+    await user.save();
 
     const token = createToken(user._id);
-    res.json({success:true,message:"OTP Verified", token})
+    res.json({ success: true, message: "OTP Verified", token });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -138,7 +138,10 @@ const verifyOtp = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
       const token = jwt.sign(email + password, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {

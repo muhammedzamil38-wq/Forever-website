@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
-import axios from 'axios'
+import axios from "axios";
 import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import Title from "../components/Title";
 
-const Add = ({token}) => {
+const Add = ({ token }) => {
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
@@ -38,38 +38,40 @@ const Add = ({token}) => {
       image3 && formData.append("image3", image3);
       image4 && formData.append("image4", image4);
 
-      const response = await axios.post(backendUrl + '/api/product/add',formData,{headers:{token}})
+      const response = await axios.post(
+        backendUrl + "/api/product/add",
+        formData,
+        { headers: { token } },
+      );
 
       if (response.data.success) {
-        toast.success(response.data.message)
-        setName('')
-        setDescription('')
-        setImage1(false)
-        setImage2(false)
-        setImage3(false)
-        setImage4(false)
-        setPrice('')
-      }else{
-        toast.error(response.data.message)
+        toast.success(response.data.message);
+        setName("");
+        setDescription("");
+        setImage1(false);
+        setImage2(false);
+        setImage3(false);
+        setImage4(false);
+        setPrice("");
+      } else {
+        toast.error(response.data.message);
       }
-
     } catch (error) {
       console.log(error);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
   return (
     <>
-    <div className="flex justify-center items-center">
-      <Title  text1='ADD' text2='PRODUCTS' />
-      
-    </div>
-    <br />
-    <form
-      onSubmit={onSubmitHandler}
-      className="flex flex-col w-full items-start gap-3"
-    >
+      <div className="flex justify-center items-center">
+        <Title text1="ADD" text2="PRODUCTS" />
+      </div>
+      <br />
+      <form
+        onSubmit={onSubmitHandler}
+        className="flex flex-col w-full items-start gap-3"
+      >
         <div className="">
           <p className="mb-2">Upload Image</p>
           <div className="flex gap-2">
@@ -77,49 +79,57 @@ const Add = ({token}) => {
               <img
                 className="w-20 cursor-pointer"
                 src={!image1 ? assets.upload_area : URL.createObjectURL(image1)}
-                alt="" />
+                alt=""
+              />
               <input
                 onChange={(e) => setImage1(e.target.files[0])}
                 className="cursor-pointer"
                 type="file"
                 id="image1"
-                hidden />
+                hidden
+              />
             </label>
             <label htmlFor="image2">
               <img
                 className="w-20 cursor-pointer"
                 src={!image2 ? assets.upload_area : URL.createObjectURL(image2)}
-                alt="" />
+                alt=""
+              />
               <input
                 onChange={(e) => setImage2(e.target.files[0])}
                 className="cursor-pointer"
                 type="file"
                 id="image2"
-                hidden />
+                hidden
+              />
             </label>
             <label htmlFor="image3">
               <img
                 className="w-20 cursor-pointer"
                 src={!image3 ? assets.upload_area : URL.createObjectURL(image3)}
-                alt="" />
+                alt=""
+              />
               <input
                 onChange={(e) => setImage3(e.target.files[0])}
                 className="cursor-pointer"
                 type="file"
                 id="image3"
-                hidden />
+                hidden
+              />
             </label>
             <label htmlFor="image4">
               <img
                 className="w-20 cursor-pointer"
                 src={!image4 ? assets.upload_area : URL.createObjectURL(image4)}
-                alt="" />
+                alt=""
+              />
               <input
                 onChange={(e) => setImage4(e.target.files[0])}
                 className="cursor-pointer"
                 type="file"
                 id="image4"
-                hidden />
+                hidden
+              />
             </label>
           </div>
         </div>
@@ -132,7 +142,8 @@ const Add = ({token}) => {
             className="w-full max-w-125 px-3 py-2"
             type="text"
             placeholder="Type Here"
-            required />
+            required
+          />
         </div>
         <div className="w-full">
           <p className="mb-mb-2">Product Description</p>
@@ -142,7 +153,8 @@ const Add = ({token}) => {
             className="w-full max-w-125 px-3 py-2"
             type="text"
             placeholder="Write content here"
-            required />
+            required
+          />
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:gap-8">
           <div>
@@ -174,17 +186,21 @@ const Add = ({token}) => {
               value={price}
               className="w-full px-3 py-2 sm:w-30"
               placeholder="25"
-              type="number" />
+              type="number"
+            />
           </div>
         </div>
         <div>
           <p className="mb-2">Product Sizes</p>
           <div className="flex gap-3">
             <div
-              onClick={() => setSizes((prev) => prev.includes("S")
-                ? prev.filter((item) => item !== "S")
-                : [...prev, "S"]
-              )}
+              onClick={() =>
+                setSizes((prev) =>
+                  prev.includes("S")
+                    ? prev.filter((item) => item !== "S")
+                    : [...prev, "S"],
+                )
+              }
             >
               <p
                 className={`${sizes.includes("S") ? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}
@@ -193,10 +209,13 @@ const Add = ({token}) => {
               </p>
             </div>
             <div
-              onClick={() => setSizes((prev) => prev.includes("M")
-                ? prev.filter((item) => item !== "M")
-                : [...prev, "M"]
-              )}
+              onClick={() =>
+                setSizes((prev) =>
+                  prev.includes("M")
+                    ? prev.filter((item) => item !== "M")
+                    : [...prev, "M"],
+                )
+              }
             >
               <p
                 className={`${sizes.includes("M") ? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}
@@ -205,10 +224,13 @@ const Add = ({token}) => {
               </p>
             </div>
             <div
-              onClick={() => setSizes((prev) => prev.includes("L")
-                ? prev.filter((item) => item !== "L")
-                : [...prev, "L"]
-              )}
+              onClick={() =>
+                setSizes((prev) =>
+                  prev.includes("L")
+                    ? prev.filter((item) => item !== "L")
+                    : [...prev, "L"],
+                )
+              }
             >
               <p
                 className={`${sizes.includes("L") ? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}
@@ -217,10 +239,13 @@ const Add = ({token}) => {
               </p>
             </div>
             <div
-              onClick={() => setSizes((prev) => prev.includes("XL")
-                ? prev.filter((item) => item !== "XL")
-                : [...prev, "XL"]
-              )}
+              onClick={() =>
+                setSizes((prev) =>
+                  prev.includes("XL")
+                    ? prev.filter((item) => item !== "XL")
+                    : [...prev, "XL"],
+                )
+              }
             >
               <p
                 className={`${sizes.includes("XL") ? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}
@@ -229,10 +254,13 @@ const Add = ({token}) => {
               </p>
             </div>
             <div
-              onClick={() => setSizes((prev) => prev.includes("XXL")
-                ? prev.filter((item) => item !== "XXL")
-                : [...prev, "XXL"]
-              )}
+              onClick={() =>
+                setSizes((prev) =>
+                  prev.includes("XXL")
+                    ? prev.filter((item) => item !== "XXL")
+                    : [...prev, "XXL"],
+                )
+              }
             >
               <p
                 className={`${sizes.includes("XXL") ? "bg-pink-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}
@@ -247,7 +275,8 @@ const Add = ({token}) => {
             onChange={() => setBestseller((prev) => !prev)}
             checked={bestseller}
             type="checkbox"
-            id="bestseller" />
+            id="bestseller"
+          />
           <label className="cursor-pointer" htmlFor="bestseller">
             Add to besseller
           </label>
@@ -258,7 +287,8 @@ const Add = ({token}) => {
         >
           ADD
         </button>
-      </form></>
+      </form>
+    </>
   );
 };
 

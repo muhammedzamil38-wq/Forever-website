@@ -7,7 +7,9 @@ const Modal = ({ title, text, buttonText, onSubmitHandler, cancelHandler }) => {
 
   console.log("you have reached modal");
   return (
-    <div className={`fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50 ${hidden ? "hidden" : "block"}`}>
+    <div
+      className={`fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50 ${hidden ? "hidden" : "block"}`}
+    >
       <div className="flex flex-col justify-between bg-gray-400 w-[50%] h-auto p-7.5 rounded-2xl">
         <div className="flex justify-start border-b border-b-black pb-3">
           <h3 className="text-2xl">{title}</h3>
@@ -25,7 +27,10 @@ const Modal = ({ title, text, buttonText, onSubmitHandler, cancelHandler }) => {
           <h5>{text}</h5>
         </div>
         <div className="flex gap-3 justify-end">
-          <button onClick={onSubmitHandler} className="bg-black text-white px-4 py-2 rounded cursor-pointer">
+          <button
+            onClick={onSubmitHandler}
+            className="bg-black text-white px-4 py-2 rounded cursor-pointer"
+          >
             {buttonText}
           </button>
           <button
