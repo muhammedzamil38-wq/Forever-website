@@ -26,7 +26,7 @@ const List = ({ token }) => {
       const response = await axios.post(
         backendUrl + "/api/product/remove",
         { id },
-        { headers: { token } }
+        { headers: { token } },
       );
       if (response.data.success) {
         toast.success(response.data.message);
@@ -47,8 +47,8 @@ const List = ({ token }) => {
 
   return (
     <>
-    <div className="flex justify-center ">
-      <Title text1='ALL PRODUCTS' text2='LIST' />
+      <div className="flex justify-center ">
+        <Title text1="ALL PRODUCTS" text2="LIST" />
       </div>
       <br />
       <div className="flex flex-col gap-2">
@@ -74,7 +74,10 @@ const List = ({ token }) => {
               {currency}
               {item.price}
             </p>
-            <p onClick={()=>removeProduct(item._id)} className="text-right md:text-center cursor-pointer text-lg">
+            <p
+              onClick={() => removeProduct(item._id)}
+              className="text-right md:text-center cursor-pointer text-lg"
+            >
               X
             </p>
           </div>

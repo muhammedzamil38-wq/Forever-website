@@ -39,9 +39,9 @@ const ShopContextProvider = (props) => {
         await axios.post(
           backendurl + "/api/cart/add",
           { itemId, size },
-          { headers: { token } }
+          { headers: { token } },
         );
-        toast.success('Item added to cart')
+        toast.success("Item added to cart");
       } catch (error) {
         console.log(error);
         toast.error(error.message);
@@ -58,7 +58,7 @@ const ShopContextProvider = (props) => {
         await axios.post(
           backendurl + "/api/cart/update",
           { itemId, size, quantity },
-          { headers: { token } }
+          { headers: { token } },
         );
       } catch (error) {
         console.log(error);
@@ -116,9 +116,13 @@ const ShopContextProvider = (props) => {
 
   const getUserCart = async (token) => {
     try {
-      const response = await axios.post(backendurl+'/api/cart/get',{}, {
-        headers: { token },
-      });
+      const response = await axios.post(
+        backendurl + "/api/cart/get",
+        {},
+        {
+          headers: { token },
+        },
+      );
       if (response.data.success) {
         setCartItems(response.data.cartData);
       }
@@ -138,7 +142,7 @@ const ShopContextProvider = (props) => {
       setToken(localStorage.getItem("token"));
       getUserCart(localStorage.getItem("token"));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   const value = {
     products,

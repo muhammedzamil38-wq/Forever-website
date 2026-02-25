@@ -224,7 +224,10 @@ const cancel_return_Order = async (req, res) => {
       const { token } = req.headers;
       if (token) {
         const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-        if (token_decode === process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
+        if (
+          token_decode ===
+          process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD
+        ) {
           isAdmin = true;
         }
       }
@@ -241,7 +244,10 @@ const cancel_return_Order = async (req, res) => {
     }
 
     await OrderModel.findByIdAndDelete(orderId);
-    res.json({ success: true, message: isAdmin ? "Return Accepted" : "Order Cancelled" });
+    res.json({
+      success: true,
+      message: isAdmin ? "Return Accepted" : "Order Cancelled",
+    });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -271,4 +277,15 @@ const returnOrder = async (req, res) => {
   }
 };
 
-export { verifyRazorpay, verifyStripe, placeOrder, placeOrderRazorPay, placeOrderStripe, userOrders, updateStatus, allOrders, cancel_return_Order, returnOrder };
+export {
+  verifyRazorpay,
+  verifyStripe,
+  placeOrder,
+  placeOrderRazorPay,
+  placeOrderStripe,
+  userOrders,
+  updateStatus,
+  allOrders,
+  cancel_return_Order,
+  returnOrder,
+};

@@ -1,23 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 @import "tailwindcss";
 
-.active{
-    background-color: #ffebf5;
-    border-color: #c586a5;
+.active {
+  background-color: #ffebf5;
+  border-color: #c586a5;
 }
 
-select,input,textarea{
-    border: 1px solid #c2c2c2;
-    outline-color: #c586a5;
-    border-radius: 4px;
+select,
+input,
+textarea {
+  border: 1px solid #c2c2c2;
+  outline-color: #c586a5;
+  border-radius: 4px;
 }
 
-*{
-    font-family: Outfit;
+* {
+  font-family: Outfit;
 }
 
-button:hover{
+button:hover {
   transform: scale(90%);
   transition: ease-in-out;
 }

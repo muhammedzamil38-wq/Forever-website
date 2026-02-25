@@ -23,7 +23,11 @@ const Orders = () => {
         return null;
       }
 
-      const response = await axios.post(backendurl + "/api/order/userorders", {}, { headers: { token } });
+      const response = await axios.post(
+        backendurl + "/api/order/userorders",
+        {},
+        { headers: { token } },
+      );
       if (response.data.success) {
         let allOrdersItem = [];
         response.data.orders.map((order) => {
@@ -49,7 +53,7 @@ const Orders = () => {
     await cancelOrder(selectedOrderId);
     setShowModal(false);
   };
-    const returnmodalSubmitHandler = async () => {
+  const returnmodalSubmitHandler = async () => {
     await returnOrder(selectedOrderId);
     setShowModal(false);
   };
@@ -58,7 +62,11 @@ const Orders = () => {
   const cancelOrder = async (orderId) => {
     try {
       if (!token) return null;
-      const response = await axios.post(backendurl + "/api/order/cancel-return", { orderId }, { headers: { token } });
+      const response = await axios.post(
+        backendurl + "/api/order/cancel-return",
+        { orderId },
+        { headers: { token } },
+      );
       if (response.data.success) {
         toast.success(response.data.message || "Order cancelled");
         loadOrderData();
@@ -74,7 +82,11 @@ const Orders = () => {
   const returnOrder = async (orderId) => {
     try {
       if (!token) return null;
-      const response = await axios.post(backendurl + "/api/order/return", { orderId, returned: true }, { headers: { token } });
+      const response = await axios.post(
+        backendurl + "/api/order/return",
+        { orderId, returned: true },
+        { headers: { token } },
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         // refresh local data so button reflects the updated state
@@ -100,18 +112,29 @@ const Orders = () => {
       </div>
 
       {showModal && (
-        <Modal 
-          text={actionType === 'cancel' ? "Are you sure you want to cancel?" : "Are you sure you want to return this order?"}
-          title={actionType === 'cancel' ? "Canceling Order" : "Return Order"} 
-          buttonText={"Yes"} 
-          onSubmitHandler={actionType === 'cancel' ? cancelmodalSubmitHandler : returnmodalSubmitHandler}
-          cancelHandler={cancelHandler} 
+        <Modal
+          text={
+            actionType === "cancel"
+              ? "Are you sure you want to cancel?"
+              : "Are you sure you want to return this order?"
+          }
+          title={actionType === "cancel" ? "Canceling Order" : "Return Order"}
+          buttonText={"Yes"}
+          onSubmitHandler={
+            actionType === "cancel"
+              ? cancelmodalSubmitHandler
+              : returnmodalSubmitHandler
+          }
+          cancelHandler={cancelHandler}
         />
       )}
 
       <div className="">
         {orderData.map((item, index) => (
-          <div key={index} className="py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div
+            key={index}
+            className="py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          >
             <div className="flex items-start gap-6 text-sm">
               <img className="w-16 sm:w-20" src={item.image[0]} alt="" />
               <div>
@@ -125,10 +148,14 @@ const Orders = () => {
                   <p>Size: {item.size}</p>
                 </div>
                 <p className="mt-1">
-                  Date: <span className="text-gray-400">{new Date(item.date).toDateString()}</span>
+                  Date:{" "}
+                  <span className="text-gray-400">
+                    {new Date(item.date).toDateString()}
+                  </span>
                 </p>
                 <p className="mt-1">
-                  Payment: <span className="text-gray-400">{item.paymentMethod}</span>
+                  Payment:{" "}
+                  <span className="text-gray-400">{item.paymentMethod}</span>
                 </p>
               </div>
             </div>
@@ -142,31 +169,51 @@ const Orders = () => {
                   <button
                     onClick={() => {
                       setSelectedOrderId(item.orderId);
-                      setActionType('cancel');
+                      setActionType("cancel");
                       setShowModal(true);
                     }}
                     disabled={item.status !== "Order Placed"}
-                    className={"border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " + (item.status !== "Order Placed" ? "opacity-40 cursor-not-allowed" : "")}
+                    className={
+                      "border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " +
+                      (item.status !== "Order Placed"
+                        ? "opacity-40 cursor-not-allowed"
+                        : "")
+                    }
                   >
-                    {item.status === "Order Placed" ? "Cancel Order" : "Cannot Cancel"}
+                    {item.status === "Order Placed"
+                      ? "Cancel Order"
+                      : "Cannot Cancel"}
                   </button>
                 ) : (
                   <button
                     onClick={() => {
                       setSelectedOrderId(item.orderId);
-                      setActionType('return');
+                      setActionType("return");
                       setShowModal(true);
                     }}
                     disabled={item.returned}
-                    className={"ml-[30%] border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " + (item.returned ? "opacity-40 cursor-not-allowed" : "")}
+                    className={
+                      "ml-[30%] border border-black rounded-sm p-2 cursor-pointer hover:border-blue-950 " +
+                      (item.returned ? "opacity-40 cursor-not-allowed" : "")
+                    }
                   >
                     {item.returned ? "Return Requested" : "Return Order"}
                   </button>
                 )}
-                {item.returned ? <p className="m-3 p-2 border border-black rounded-sm text-center">⚠️The order will be removed from here after admin accepted the return</p> : ""}
+                {item.returned ? (
+                  <p className="m-3 p-2 border border-black rounded-sm text-center">
+                    ⚠️The order will be removed from here after admin accepted
+                    the return
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
 
-              <button onClick={loadOrderData} className="border px-4 py-2 text-sm font-medium rounded-sm cursor-pointer">
+              <button
+                onClick={loadOrderData}
+                className="border px-4 py-2 text-sm font-medium rounded-sm cursor-pointer"
+              >
                 Track Order
               </button>
             </div>

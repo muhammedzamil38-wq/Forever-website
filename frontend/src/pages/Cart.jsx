@@ -6,30 +6,29 @@ import CartTotal from "../components/CartTotal";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity ,navigate} =
+  const { products, currency, cartItems, updateQuantity, navigate } =
     useContext(ShopContext);
 
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-    if (products.length>0) {
+    if (products.length > 0) {
       const tempData = [];
-    for (const items in cartItems) {
-      for (const item in cartItems[items]) {
-        if (cartItems[items][item] > 0) {
-          tempData.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item],
-          });
+      for (const items in cartItems) {
+        for (const item in cartItems[items]) {
+          if (cartItems[items][item] > 0) {
+            tempData.push({
+              _id: items,
+              size: item,
+              quantity: cartItems[items][item],
+            });
+          }
         }
       }
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCartData(tempData);
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCartData(tempData);
-    }
-    
-  }, [cartItems,products]);
+  }, [cartItems, products]);
 
   return (
     <div className="border-t pt-14">
@@ -39,7 +38,7 @@ const Cart = () => {
       <div>
         {cartData.map((item, index) => {
           const productData = products.find(
-            (product) => product._id === item._id
+            (product) => product._id === item._id,
           );
 
           return (
@@ -75,7 +74,7 @@ const Cart = () => {
                     : updateQuantity(
                         item._id,
                         item.size,
-                        Number(e.target.value)
+                        Number(e.target.value),
                       )
                 }
                 type="number"
@@ -97,7 +96,10 @@ const Cart = () => {
         <div className="w-full sm:w-112.5">
           <CartTotal />
           <div className="w-full text-end">
-            <button onClick={()=>navigate('/place-order')} className="bg-black text-white text-sm my-8 px-8 py-3 cursor-pointer">
+            <button
+              onClick={() => navigate("/place-order")}
+              className="bg-black text-white text-sm my-8 px-8 py-3 cursor-pointer"
+            >
               PROCEED TO CHECKOUT
             </button>
           </div>

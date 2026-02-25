@@ -8,7 +8,16 @@ import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
-  const { navigate , backendurl,token,cartItems,setCartItems,getCartAmount,delivery_fee,products} = useContext(ShopContext);
+  const {
+    navigate,
+    backendurl,
+    token,
+    cartItems,
+    setCartItems,
+    getCartAmount,
+    delivery_fee,
+    products,
+  } = useContext(ShopContext);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -16,46 +25,75 @@ const PlaceOrder = () => {
     email: "",
     street: "",
     city: "",
-    state: "",                                                                                                                           
+    state: "",
     zipcode: "",
     country: "",
     phone: "",
   });
 
-    const [errors, setErrors] = useState({ firstName: "", LastName:"" ,email: "", street: "", city: "", state: "", zipcode: "", country: "", phone: ""});
-  
-    const isValidEmail = (email) => {
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(String(email).toLowerCase());
+  const [errors, setErrors] = useState({
+    firstName: "",
+    LastName: "",
+    email: "",
+    street: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    country: "",
+    phone: "",
+  });
+
+  const isValidEmail = (email) => {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validateInputs = () => {
+    const newErrors = {
+      firstName: "",
+      LastName: "",
+      email: "",
+      street: "",
+      city: "",
+      state: "",
+      zipcode: "",
+      country: "",
+      phone: "",
     };
-  
-    const validateInputs = () => {
-      const newErrors = { firstName: "",LastName: "" ,email: "", street: "", city: "", state: "", zipcode: "", country: "", phone: ""};
-      
-        if (!formData.firstName.trim()) newErrors.firstName = "Name is required";
-        if (!formData.LastName.trim()) newErrors.LastName = "Name is required";
-      
-      if (!formData.email.trim()) newErrors.email = "Email is required";
-      else if (!isValidEmail(formData.email)) newErrors.email = "Provide a valid email address";
 
-      if (!formData.street.trim()) newErrors.street = "Street is required";
-      if (!formData.city.trim()) newErrors.city = "City is required";
-      if (!formData.state.trim()) newErrors.state = "State is required";
-      if (!formData.zipcode.trim()) newErrors.zipcode = "Zipcode is required";
-      if (!formData.country.trim()) newErrors.country = "Country is required";
-      
+    if (!formData.firstName.trim()) newErrors.firstName = "Name is required";
+    if (!formData.LastName.trim()) newErrors.LastName = "Name is required";
 
-      if (!formData.phone.trim()){ 
-        newErrors.phone = "Phone is required"
-      }else if(formData.phone.length !== 10){
-        newErrors.phone = "Invalid Phone Number"
-      }
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!isValidEmail(formData.email))
+      newErrors.email = "Provide a valid email address";
 
-  
-      setErrors(newErrors);
-      return !newErrors.firstName && !newErrors.LastName && !newErrors.email && !newErrors.street && !newErrors.city && !newErrors.state && !newErrors.zipcode && !newErrors.country && !newErrors.phone;
-    };
-  
+    if (!formData.street.trim()) newErrors.street = "Street is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.state.trim()) newErrors.state = "State is required";
+    if (!formData.zipcode.trim()) newErrors.zipcode = "Zipcode is required";
+    if (!formData.country.trim()) newErrors.country = "Country is required";
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone is required";
+    } else if (formData.phone.length !== 10) {
+      newErrors.phone = "Invalid Phone Number";
+    }
+
+    setErrors(newErrors);
+    return (
+      !newErrors.firstName &&
+      !newErrors.LastName &&
+      !newErrors.email &&
+      !newErrors.street &&
+      !newErrors.city &&
+      !newErrors.state &&
+      !newErrors.zipcode &&
+      !newErrors.country &&
+      !newErrors.phone
+    );
+  };
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
@@ -64,17 +102,17 @@ const PlaceOrder = () => {
     setFormData((data) => ({ ...data, [name]: value }));
   };
 
-  const initPay = (order, orderData)=>{
+  const initPay = (order, orderData) => {
     const option = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: order.amount,
-      currency:order.currency,
-      name:"Order Payment",
-      description:"Order Payment",
-      order_id:order.id,
+      currency: order.currency,
+      name: "Order Payment",
+      description: "Order Payment",
+      order_id: order.id,
       receipt: order.receipt,
       handler: async (response) => {
-        console.log(response)
+        console.log(response);
         try {
           const verifyData = {
             ...response,
@@ -83,86 +121,109 @@ const PlaceOrder = () => {
             amount: orderData.amount,
             address: orderData.address,
           };
-          const {data} = await axios.post(backendurl+'/api/order/verifyRazorpay',verifyData,{headers:{token}})
+          const { data } = await axios.post(
+            backendurl + "/api/order/verifyRazorpay",
+            verifyData,
+            { headers: { token } },
+          );
           if (data.success) {
-            navigate('/orders')
-            setCartItems({})
+            navigate("/orders");
+            setCartItems({});
           }
         } catch (error) {
           console.log(error);
-          toast.error(error.message)
+          toast.error(error.message);
         }
-      }
-    }
-    const rzp = new window.Razorpay(option)
-    rzp.open()
-  }
-  
+      },
+    };
+    const rzp = new window.Razorpay(option);
+    rzp.open();
+  };
+
   const onSubmitHandler = async (event) => {
-    
-    event.preventDefault()
-    if(!validateInputs()) return;
+    event.preventDefault();
+    if (!validateInputs()) return;
     try {
-      let orderItems = []
-      for(const items in cartItems){
-        for(const item in cartItems[items]){
-          if (cartItems[items][item]>0) {
-            const itemInfo = structuredClone(products.find(product => product._id === items))
-            if(itemInfo){
-              itemInfo.size = item
-              itemInfo.quantity = cartItems[items][item]
-              orderItems.push(itemInfo)
+      let orderItems = [];
+      for (const items in cartItems) {
+        for (const item in cartItems[items]) {
+          if (cartItems[items][item] > 0) {
+            const itemInfo = structuredClone(
+              products.find((product) => product._id === items),
+            );
+            if (itemInfo) {
+              itemInfo.size = item;
+              itemInfo.quantity = cartItems[items][item];
+              orderItems.push(itemInfo);
             }
           }
         }
       }
       let orderData = {
-        address:formData,
-        items:orderItems,
-        amount:getCartAmount()+delivery_fee
-      }
+        address: formData,
+        items: orderItems,
+        amount: getCartAmount() + delivery_fee,
+      };
 
-      switch(method){
-        // API Calls for COD  
-        case 'cod':
-          { const response = await axios.post(backendurl+'/api/order/place',orderData,{headers:{token}})      
+      switch (method) {
+        // API Calls for COD
+        case "cod": {
+          const response = await axios.post(
+            backendurl + "/api/order/place",
+            orderData,
+            { headers: { token } },
+          );
           if (response.data.success) {
-            setCartItems({})
-            navigate('/orders')
-          }else{
-            toast.error(response.data.message)
+            setCartItems({});
+            navigate("/orders");
+          } else {
+            toast.error(response.data.message);
           }
-           break ; }
+          break;
+        }
 
-        case 'stripe':
-          { const responseStripe = await axios.post(backendurl+'/api/order/stripe',orderData,{headers:{token}})
-          console.log(responseStripe )
+        case "stripe": {
+          const responseStripe = await axios.post(
+            backendurl + "/api/order/stripe",
+            orderData,
+            { headers: { token } },
+          );
+          console.log(responseStripe);
           if (responseStripe.data.success) {
-            localStorage.setItem('orderData', JSON.stringify(orderData))
-            const {session_url} = responseStripe.data
-            window.location.replace(session_url)
-          }else{
-            toast.error(responseStripe.data.message)
+            localStorage.setItem("orderData", JSON.stringify(orderData));
+            const { session_url } = responseStripe.data;
+            window.location.replace(session_url);
+          } else {
+            toast.error(responseStripe.data.message);
           }
-          break; }
-        
-        case 'razorpay':
-          { const responseRazorpay = await axios.post(backendurl+ '/api/order/razorpay',orderData,{headers:{token}})
+          break;
+        }
+
+        case "razorpay": {
+          const responseRazorpay = await axios.post(
+            backendurl + "/api/order/razorpay",
+            orderData,
+            { headers: { token } },
+          );
           if (responseRazorpay.data.success) {
             initPay(responseRazorpay.data.order, orderData);
           }
-          break; }
-           default:
-            break
-      }}
-     catch (error) {
-      console.log("error")
-      toast.error(error.message)
+          break;
+        }
+        default:
+          break;
+      }
+    } catch (error) {
+      console.log("error");
+      toast.error(error.message);
     }
-  }
+  };
 
   return (
-    <form onSubmit={onSubmitHandler} className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
+    <form
+      onSubmit={onSubmitHandler}
+      className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t"
+    >
       {/* ------------ Left Side ---------------- */}
       <div className="flex flex-col gap-4 w-full sm:max-w-120">
         <div className="text-xl sm:text-2xl my-3">
@@ -178,7 +239,13 @@ const PlaceOrder = () => {
               placeholder="First Name"
               className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
             />
-            <p className={errors.firstName ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.firstName}</p>
+            <p
+              className={
+                errors.firstName ? "text-red-600 text-[9px] mt-1" : "hidden"
+              }
+            >
+              {errors.firstName}
+            </p>
           </div>
           <div className="flex-1">
             <input
@@ -189,7 +256,13 @@ const PlaceOrder = () => {
               placeholder="Last Name"
               className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
             />
-            <p className={errors.LastName ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.LastName}</p>
+            <p
+              className={
+                errors.LastName ? "text-red-600 text-[9px] mt-1" : "hidden"
+              }
+            >
+              {errors.LastName}
+            </p>
           </div>
         </div>
         <input
@@ -200,7 +273,9 @@ const PlaceOrder = () => {
           placeholder="Email address"
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
         />
-        <p className={errors.email ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.email}</p>
+        <p className={errors.email ? "text-red-600 text-[9px] mt-1" : "hidden"}>
+          {errors.email}
+        </p>
         <input
           onChange={onChangeHandler}
           name="street"
@@ -208,9 +283,12 @@ const PlaceOrder = () => {
           type="text"
           placeholder="Street"
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-          
         />
-        <p className={errors.street ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.street}</p>
+        <p
+          className={errors.street ? "text-red-600 text-[9px] mt-1" : "hidden"}
+        >
+          {errors.street}
+        </p>
         <div className="flex gap-3">
           <div className="flex-1">
             <input
@@ -221,7 +299,13 @@ const PlaceOrder = () => {
               placeholder="City"
               className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
             />
-            <p className={errors.city ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.city}</p>
+            <p
+              className={
+                errors.city ? "text-red-600 text-[9px] mt-1" : "hidden"
+              }
+            >
+              {errors.city}
+            </p>
           </div>
           <div className="flex-1">
             <input
@@ -232,7 +316,13 @@ const PlaceOrder = () => {
               placeholder="State"
               className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
             />
-            <p className={errors.state ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.state}</p>
+            <p
+              className={
+                errors.state ? "text-red-600 text-[9px] mt-1" : "hidden"
+              }
+            >
+              {errors.state}
+            </p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -245,7 +335,13 @@ const PlaceOrder = () => {
               placeholder="Zipcode"
               className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
             />
-            <p className={errors.zipcode ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.zipcode}</p>
+            <p
+              className={
+                errors.zipcode ? "text-red-600 text-[9px] mt-1" : "hidden"
+              }
+            >
+              {errors.zipcode}
+            </p>
           </div>
           <div className="flex-1">
             <input
@@ -256,7 +352,13 @@ const PlaceOrder = () => {
               placeholder="Country"
               className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
             />
-            <p className={errors.country ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.country}</p>
+            <p
+              className={
+                errors.country ? "text-red-600 text-[9px] mt-1" : "hidden"
+              }
+            >
+              {errors.country}
+            </p>
           </div>
         </div>
         <input
@@ -267,7 +369,9 @@ const PlaceOrder = () => {
           placeholder="Phone"
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
         />
-        <p className={errors.phone ? 'text-red-600 text-[9px] mt-1' : 'hidden'}>{errors.phone}</p>
+        <p className={errors.phone ? "text-red-600 text-[9px] mt-1" : "hidden"}>
+          {errors.phone}
+        </p>
       </div>
 
       {/* ---------------- Right Side --------------------- */}

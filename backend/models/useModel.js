@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     otpExpire: { type: Date },
     cartData: { type: Object, default: {} },
   },
-  { minimize: false }
+  { minimize: false },
 );
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
