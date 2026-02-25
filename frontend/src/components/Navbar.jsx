@@ -3,6 +3,7 @@ import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import "../index.css";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -84,12 +85,19 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        <Link to="/cart" className="relative">
+        {GetCartCount()>0&&<Link to="/cart" className="relative">
           <img src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
           <p className="absolute -right-1.25 -bottom-1.25 w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
             {GetCartCount()}
           </p>
-        </Link>
+        </Link>}
+        {GetCartCount()===0&&<Link  className="relative">
+          <img onClick={()=>toast.error('There is no item on the cart. Please add item to proceed')} src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
+          <p onClick={()=>toast.error('There is no item on the cart. Please add item to proceed')} className="absolute -right-1.25 -bottom-1.25 w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+            {GetCartCount()}
+          </p>
+        </Link>}
+
         <img
           onClick={() => setVisible(true)}
           src={assets.menu_icon}
