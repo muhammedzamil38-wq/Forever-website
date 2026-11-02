@@ -9,11 +9,27 @@ const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
+const isValidEmail = async (email) => {
+  if (!email) {
+    return false;
+  } else if (!email.includes("@") && !email.includes(".")) {
+    return false;
+  }
+  return true;
+  
+};
+
 // Route for user login
 
 const loginUser = async (req, res) => {
+
+  
   try {
+
     const { email, password } = req.body;
+    if(isValidEmail(email) === false){
+      throw new Error('Email invalid')
+    }
 
     const user = await userModel.findOne({ email });
 
@@ -138,10 +154,7 @@ const verifyOtp = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (
-      email === process.env.ADMIN_EMAIL &&
-      password === process.env.ADMIN_PASSWORD
-    ) {
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
       const token = jwt.sign(email + password, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {

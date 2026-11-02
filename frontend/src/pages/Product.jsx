@@ -16,12 +16,12 @@ const Product = () => {
       if (item._id === productId) {
         setProductData(item);
         setImage(item.image[0]);
-        return null;
+        return null ;
       }
     });
   };
 
-  useEffect(() => {
+  useEffect(() => {     
     fetchProductData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId, products]);
@@ -41,12 +41,12 @@ const Product = () => {
                 className="w-[24%] sm:w-full sm:mb-3 shrink-0 cursor-pointer"
               />
             ))}
-          </div>
+          </div>                  
           <div className="w-full sm:w-[80%]">
             <img className="w-full h-auto" src={image} alt="" />
           </div>
         </div>
-        {/*-------- Product Info ------------*/}
+        {/*--------    Product Info  ------------*/}
         <div className="flex-1">
           <h1 className="font-medium text-2xl mt-2">{productData.name}</h1>
           <div className="flex items-center gap-1 mt-2">
